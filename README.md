@@ -1,2 +1,1 @@
-# titrica
-Titrica Titrić
+# Titrica Titrić
