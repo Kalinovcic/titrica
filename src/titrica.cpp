@@ -17,6 +17,7 @@ using namespace glm;
 #include "imgui/imgui_draw.cpp"
 using namespace ImGui;
 
+#include <algorithm>
 #include <vector>
 
 namespace kutikula
@@ -43,6 +44,9 @@ float m2 = 1;
 float l1 = 2;
 float l2 = 3;
 float A = 1;
+
+std::vector<std::pair<float, float>> graph1;
+std::vector<std::pair<float, float>> graph2;
 
 bool show_grid = true;
 

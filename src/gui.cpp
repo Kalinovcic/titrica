@@ -307,5 +307,83 @@ void render_gui()
     if (A > l1) A = l1;
     End();
 
+    bool open2 = true;
+    auto size2 = ImVec2(700, 300);
+    SetNextWindowSize(size2, ImGuiSetCond_Always);
+    Begin("Graph", &open2, ImGuiWindowFlags_NoResize);
+    ImVec2 canvas_pos = ImGui::GetCursorScreenPos();
+    ImVec2 canvas_size = ImGui::GetContentRegionAvail();
+    auto draw_list = ImGui::GetWindowDrawList();
+
+    float end_time = GetTime();
+    float begin_time = end_time - 30;
+    ImVec2 b1, b2;
+    bool first = true;
+    for (int i = 0; i < graph1.size(); i++)
+    {
+        auto p1 = graph1[i];
+        auto p2 = graph2[i];
+        if (p1.first < begin_time)
+        {
+            graph1.erase(graph1.begin());
+            graph2.erase(graph2.begin());
+            i--;
+            continue;
+        }
+
+        ImVec2 a1, a2;
+        a1.x = a2.x = (p1.first - begin_time) / (end_time - begin_time) * canvas_size.x + canvas_pos.x;
+        float yd = max(l1, l2);
+        a1.y = (p1.second / yd * 0.5 + 0.5) * canvas_size.y + canvas_pos.y;
+        a2.y = (p2.second / yd * 0.5 + 0.5) * canvas_size.y + canvas_pos.y;
+
+        if (!first)
+        {
+            draw_list->AddLine(a1, b1, ImColor(255, 128, 0, 255), 2.0);
+            draw_list->AddLine(a2, b2, ImColor(0, 128, 255, 255), 2.0);
+        }
+
+        first = false;
+        b1 = a1;
+        b2 = a2;
+    }
+    /*
+    for (int xi = 0; xi < canvas_size.x; xi++)
+    {
+        auto get_value = [](float time, bool first)
+        {
+            float g = 9.81;
+            float T1 = 2 * M_PI * sqrt(l1 / g);
+            float T2 = 2 * M_PI * sqrt(l2 / g);
+            float Euk = A * A * m1 * g / l1 * 0.5;
+            float E1 = Euk * pow(cos(0.3 * time) * 0.5 + 0.5, 2);
+            float E2 = Euk - E1;
+            float A1 = sqrt(2 * E1 * l1 / m1 / g);
+            float A2 = sqrt(2 * E2 * l2 / m2 / g);
+            if (A1 < -l1) A1 = -l1;
+            if (A2 < -l2) A2 = -l2;
+            if (A1 > l1) A1 = l1;
+            if (A2 > l2) A2 = l2;
+            float x1 = cos(time * T1) * A1;
+            float x2 = cos(time * T2) * A2;
+            return first ? x1 : x2;
+        };
+
+        float ttt = 5.0;
+        float yd = max(l1, l2);
+        int y1a = (int)((get_value((xi + 0) / ttt, true) / yd * 0.5 + 0.5) * canvas_size.y + canvas_pos.y);
+        int y2a = (int)((get_value((xi + 1) / ttt, true) / yd * 0.5 + 0.5) * canvas_size.y + canvas_pos.y);
+
+        int y1b = (int)((get_value((xi + 0) / ttt, false) / yd * 0.5 + 0.5) * canvas_size.y + canvas_pos.y);
+        int y2b = (int)((get_value((xi + 1) / ttt, false) / yd * 0.5 + 0.5) * canvas_size.y + canvas_pos.y);
+
+        int x1 = canvas_pos.x + xi;
+        int x2 = canvas_pos.x + xi + 1;
+        draw_list->AddLine(ImVec2(x1, y1a), ImVec2(x2, y2a), ImColor(255, 128, 0, 255), 2.0);
+        draw_list->AddLine(ImVec2(x1, y1b), ImVec2(x2, y2b), ImColor(0, 128, 255, 255), 2.0);
+    }
+    */
+    End();
+
     Render();
 }

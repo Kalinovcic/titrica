@@ -315,15 +315,22 @@ void render_3d_test()
     float T1 = 2 * M_PI * sqrt(l1 / g);
     float T2 = 2 * M_PI * sqrt(l2 / g);
     float Euk = A * A * m1 * g / l1 * 0.5;
-    float E1 = Euk * (cos(0.3 * time) * 0.5 + 0.5);
+    float E1 = Euk * pow(cos(0.3 * time) * 0.5 + 0.5, 2);
     float E2 = Euk - E1;
     float A1 = sqrt(2 * E1 * l1 / m1 / g);
     float A2 = sqrt(2 * E2 * l2 / m2 / g);
+    if (A1 < -l1) A1 = -l1;
+    if (A2 < -l2) A2 = -l2;
+    if (A1 > l1) A1 = l1;
+    if (A2 > l2) A2 = l2;
 
     float x1 = cos(time * T1) * A1;
     float x2 = cos(time * T2) * A2;
     float y1 = sqrt(l1 * l1 - x1 * x1);
     float y2 = sqrt(l2 * l2 - x2 * x2);
+
+    graph1.push_back({ time, x1 });
+    graph2.push_back({ time, x2 });
 
     vec3 rope_left = vec3(0, -y1, x1);
     vec3 rope_right = vec3(0, -y2, x2);
