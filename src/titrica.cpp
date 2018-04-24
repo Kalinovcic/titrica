@@ -45,6 +45,8 @@ float l1 = 2;
 float l2 = 3;
 float A = 1;
 
+bool do_graph1 = true;
+bool do_graph2 = true;
 std::vector<std::pair<float, float>> graph1;
 std::vector<std::pair<float, float>> graph2;
 
